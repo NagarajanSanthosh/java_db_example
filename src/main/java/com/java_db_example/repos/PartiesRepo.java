@@ -63,10 +63,23 @@ public class PartiesRepo {
             statement.setString(2, chief);
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error adding party");
+            System.out.println("Error adding party " + e.getMessage());
             e.printStackTrace();
         }
         return "Added successfully....";
+    }
+
+    public boolean isPartyIdValid(int partyId) {
+        String sql = "select count(*) from parties where party_id = " + partyId;
+        try (Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(sql)) {
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching party id");
+        }
+        return false;
     }
 
     /**
@@ -89,31 +102,35 @@ public class PartiesRepo {
      * @throws SQLException
      */
     public void methodHandler(int option) throws SQLException {
-
+        // call getparties
         if (option == 1) {
             List<Parties> party = getAllParties();
             // System.out.println(party.toString());
             partyPrinter(party);
-        } else if (option == 2) {
+        }
+        // add party
+        else if (option == 2) {
             System.out.println("Enter Party Name: ");
             String partyName = scanner.nextLine();
             System.out.println("Enter Chief: ");
             String chief = scanner.nextLine();
             String result = addParty(partyName, chief);
             System.out.println(result);
-            if (option == 3) {
+        } else if (option == 3) {
 
-            } else if (option == 4) {
+        } else if (option == 4) {
 
-            } else
-                close();
-        }
+        } else
+            close();
 
     }
 
     public void close() throws SQLException {
         if (connection != null && !connection.isClosed()) {
             connection.close();
+        }
+        if (scanner != null) {
+            scanner.close();
         }
     }
 

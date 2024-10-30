@@ -23,16 +23,17 @@ public class Application {
                 System.out.println("Enter 1 to get into Admin portal ");
                 System.out.println("Enter 2 to get into Voter portal ");
                 System.out.println("Enter 0 to exit ");
-                System.out.println();
                 int options = scanner.nextInt();
                 if (options == 1) {
                     Password password = new Password();
+
                     if (password.handleInput()) {
                         System.out.println("Welcome!!\n---------\nEnter 1 - Party portal");
                         System.out.println("Enter 2 - candidate portal");
                         System.out.println("Enter 3 - ward portal");
                         System.out.println("Enter 4 - poll booth portal");
                         int adminOptions = scanner.nextInt();
+
                         // Party Manipulation
                         if (adminOptions == 1) {
                             System.out.println("Enter 1 - View Parties");
@@ -41,7 +42,6 @@ public class Application {
                             System.out.println("Enter 4 - Update parties");
 
                             int option = scanner.nextInt();
-                            scanner.nextLine();
                             partyRepo.methodHandler(option);
 
                         }
@@ -51,15 +51,6 @@ public class Application {
                                     "Enter 1 to view candidate \nEnter 2 to add candidate\nEnter 3 to update candidate\nEnter 4 to delete candidate");
                             int option = scanner.nextInt();
                             candidatesRepo.methodHandler(option);
-                            // if (option == 1) {
-                                
-                            // }
-                            // else if (option == 1) {
-                            //     System.out.println("Enter candidate name: ");
-                            //     String candidateName = scanner.nextLine();
-                            //     System.out.println("Enter Party Name: ");
-                            //     String partyName = scanner.nextLine();
-                            // }
                         }
                         // WARD MANIPULATION
                         else if (adminOptions == 3) {
@@ -73,6 +64,7 @@ public class Application {
                         }
                     } else {
                         System.out.println("Wrong Password!!!");
+                        continue;
                     }
 
                 } else if (options == 2) {

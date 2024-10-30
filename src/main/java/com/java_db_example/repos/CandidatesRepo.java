@@ -1,6 +1,7 @@
 package com.java_db_example.repos;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -59,11 +60,38 @@ public class CandidatesRepo {
         }
     }
 
-    public void methodHandler(int option) {
+    public String addCandidate(String candidateName, int partyId, int constituencyId) throws SQLException {
+        String sql = "insert into candidates (candidate_name, party_id, constituency_id) values (?, ?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(sql);) {
+
+            if (new PartiesRepo().isPartyIdValid(partyId)
+                    && new ConstituencyRepo().isConstituencyIdValid(constituencyId)) {
+                statement.setString(1, candidateName);
+                statement.setInt(2, partyId);
+                statement.setInt(3, constituencyId);
+                statement.executeUpdate();
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error adding candidates");
+        }
+        return "Added successfully...";
+    }
+
+    public void methodHandler(int option) throws SQLException {
 
         if (option == 1) {
-            List<Candidates> candidate = getAllCandidates();
-            candidatePrinter(candidate);
+            candidatePrinter(getAllCandidates());
+        } else if (option == 2) {
+            System.out.println("Enter Candidate Name: ");
+            String candidateName = scanner.nextLine();
+            System.out.println("Enter Party id: ");
+            int partyId = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("Enter Constituency id: ");
+            int constituencyId = scanner.nextInt();
+            String result = addCandidate(candidateName, partyId, constituencyId);
+            System.out.println(result);
         }
     }
 
